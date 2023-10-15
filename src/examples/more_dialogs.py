@@ -145,7 +145,7 @@ class TestFrame(wx.Frame):
     async def on_TextEntryDialog(self, event):
         dlg = TextEntryDialog(self, "Please enter some text:")
         return_code = await self.ShowDialog(dlg)
-        print ("The ReturnCode is %s and you entered '%s'" % (return_code, dlg.GetValue()))
+        print(f"The ReturnCode is {return_code} and you entered '{dlg.GetValue()}'")
 
 
 if __name__ == "__main__":        

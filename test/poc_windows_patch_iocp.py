@@ -100,7 +100,7 @@ class WxAsyncApp(wx.App):
             if not task.done():
                 task.cancel()
                 if self.warn_on_cancel_callback:
-                    warnings.warn("cancelling callback" + str(obj) + str(task))
+                    warnings.warn(f"cancelling callback{str(obj)}{str(task)}")
         del self.BoundObjects[obj]
 
 
