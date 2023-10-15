@@ -18,7 +18,7 @@ class TestFrame(wx.Frame):
 
         # Add N sliders.
         self.sliders =  []
-        for i in range(SLIDERS_COUNT):
+        for _ in range(SLIDERS_COUNT):
             s = wx.Slider(self)
             self.sliders.append(s)
             vbox.Add(s, 1, wx.EXPAND|wx.ALL)
@@ -36,7 +36,7 @@ class TestFrame(wx.Frame):
 
         for i in range(5):
             dots = "." * i
-            label = "Initialising" + dots
+            label = f"Initialising{dots}"
             self.button.Label = label
             # Add a delay so we can see the button properites change.
             # (allows the wx MainLoop async coroutine to run)

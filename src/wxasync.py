@@ -97,7 +97,7 @@ class WxAsyncApp(wx.App):
             if not task.done():
                 task.cancel()
                 if self.warn_on_cancel_callback:
-                    warnings.warn("cancelling callback" + str(obj) + str(task))
+                    warnings.warn(f"cancelling callback{str(obj)}{str(task)}")
         del self.BoundObjects[obj]
 
 
@@ -163,17 +163,15 @@ async def AsyncShowDialog(dlg):
 async def AsyncShowDialogModal(dlg):
     if type(dlg) in [HtmlHelpDialog, wx.FileDialog, wx.DirDialog, wx.FontDialog, wx.ColourDialog, wx.MessageDialog]:
         return await ShowModalInExecutor(dlg)
-    else:
-        frames = set(wx.GetTopLevelWindows()) - set([dlg])
-        states = {frame: frame.IsEnabled() for frame in frames}
-        try:
-            for frame in frames:
-                frame.Disable()
-            return await AsyncShowDialog(dlg)
-        finally:
-            for frame in frames:
-                frame.Enable(states[frame])
-            parent = dlg.GetParent()
-            if parent:
-                parent.SetFocus()
+    frames = set(wx.GetTopLevelWindows()) - {dlg}
+    states = {frame: frame.IsEnabled() for frame in frames}
+    try:
+        for frame in frames:
+            frame.Disable()
+        return await AsyncShowDialog(dlg)
+    finally:
+        for frame in frames:
+            frame.Enable(states[frame])
+        if parent := dlg.GetParent():
+            parent.SetFocus()
                     

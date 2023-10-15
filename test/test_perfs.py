@@ -418,32 +418,39 @@ def flatten_list(lst_of_lst):
 def format_table(data):
     lens = [[len(str(e)) for e in row] for row in data]
     collens = [max(col) for col in zip(*lens)]
-    row_strs = []
-    for row in data:
-        row_strs.append(" ".join([str(elm).rjust(l) if i else str(elm).ljust(l) for i, (l, elm) in enumerate(zip(collens, row))]))
+    row_strs = [
+        " ".join(
+            [
+                str(elm).rjust(l) if i else str(elm).ljust(l)
+                for i, (l, elm) in enumerate(zip(collens, row))
+            ]
+        )
+        for row in data
+    ]
     return "\n".join(row_strs)
 
 def format_stat_results(results):
     columns = sorted(set(flatten_list([statlist.keys() for statlist in results.values()])))
     table = [[""] + columns]
-    for key, stats in results.items():
-        table.append([key] + [stats.get(c, "") for c in columns])
+    table.extend(
+        [key] + [stats.get(c, "") for c in columns]
+        for key, stats in results.items()
+    )
     return (format_table(table))
     
 if __name__ == '__main__':
     results = {}
-    results = {}
-    results["wxAsyncApp (asyncio latency)"] = WxAsyncAsyncIOLatencyTest.run()
-    
+    results = {"wxAsyncApp (asyncio latency)": WxAsyncAsyncIOLatencyTest.run()}
     results["wx.App (wx.PostEvent)"] = WxMessageThroughputTest.run()
     results["asyncio (loop.call_soon)"] = AioThroughputTest.run()
     results["wxAsyncApp (wx.PostEvent)"] = WxAsyncAppMessageThroughputTest.run()
-    
+
     print ("Individual Tests: ")
     print (format_stat_results(results))
-    
-    combined_results = {}
-    combined_results["wxAsyncApp (wx.PostEvent+loop.call_soon) throughput"] = WxAsyncAppCombinedThroughputTest.run()
+
+    combined_results = {
+        "wxAsyncApp (wx.PostEvent+loop.call_soon) throughput": WxAsyncAppCombinedThroughputTest.run()
+    }
     combined_results["wxAsyncApp (wx.PostEvent+loop.call_soon) latency"] = WxAsyncAppCombinedLatencyTest.run()
     print ("\nCombined Tests, using wx and asyncio at the same time:\n")
     print (format_stat_results(combined_results))

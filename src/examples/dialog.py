@@ -9,7 +9,7 @@ async def opendialog():
     """
     dlg = TextEntryDialog(None, "Please enter some text:")
     return_code = await AsyncShowDialog(dlg)
-    print ("The ReturnCode is %s and you entered '%s'" % (return_code, dlg.GetValue()))
+    print(f"The ReturnCode is {return_code} and you entered '{dlg.GetValue()}'")
     app = wx.App.Get()
     app.ExitMainLoop()
 
